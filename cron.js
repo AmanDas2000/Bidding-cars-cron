@@ -6,6 +6,7 @@ var nodemailer = require('nodemailer');
 const Razorpay = require('razorpay');
 const axios = require('axios');
 const { google } = require('googleapis');
+const serverless = require('serverless-http');
 const uri = process.env.ATLAS_URI;
 
 mongoose.connect(uri, { useNewUrlParser: true });
@@ -142,3 +143,5 @@ socketApp.use(cors());
 socketServer.listen(6000, () => {
   console.log(`Server is running on socket: 6000`);
 });
+
+module.exports.handler = serverless(socketApp);
