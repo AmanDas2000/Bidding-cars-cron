@@ -130,8 +130,10 @@ const socketServer = http.createServer(socketApp);
 const { Server } = require('socket.io');
 const io = new Server(socketServer, {
   cors: {
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST'],
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
   },
 });
 
