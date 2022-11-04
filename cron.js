@@ -8,6 +8,19 @@ const axios = require('axios');
 const { google } = require('googleapis');
 const uri = process.env.ATLAS_URI;
 const port = process.env.PORT || 6000;
+const http = require('http');
+const socketApp = require('express')();
+const cors = require('cors');
+const socketServer = http.createServer(socketApp);
+const { Server } = require('socket.io');
+const io = new Server(socketServer, {
+  cors: {
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+  },
+});
 
 mongoose.connect(uri, { useNewUrlParser: true });
 const connection = mongoose.connection;
@@ -123,19 +136,7 @@ cron.schedule('* * * * *', async () => {
   });
 });
 
-const http = require('http');
-const socketApp = require('express')();
-const cors = require('cors');
-const socketServer = http.createServer(socketApp);
-const { Server } = require('socket.io');
-const io = new Server(socketServer, {
-  cors: {
-    "origin": "*",
-    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-    "preflightContinue": false,
-    "optionsSuccessStatus": 204
-  },
-});
+
 
 io.on('connection', (socket) => {
   console.log('user connected');
