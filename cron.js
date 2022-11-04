@@ -141,24 +141,17 @@ cron.schedule('* * * * *', async () => {
 io.on('connection', (socket) => {
   console.log('user connected');
 
-  socket.on('bid_closed', (data) => {
+  socket.on('bid_close', (data) => {
     console.log('bid closed', data);
-    io.emit('bid_closed', data);
+    io.emit('bid_close', data);
   });
   
   socket.on('bid_update', (data) => {
     console.log('bid updated', data);
-    io.emit('bid_updated', data);
+    io.emit('bid_update', data);
   });
 });
 
-// io.on('bid_close', (socket) => {
-//   console.log('bid closed', socket.data);
-// });
-
-// io.on('bid_update', (socket) => {
-//   console.log('bid updated', socket.data);
-// });
 
 socketApp.use(cors());
 
