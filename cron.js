@@ -14,7 +14,7 @@ connection.once('open', () => {
   console.log('MongoDB database connection established successfully');
 });
 
-async function sendMail(name, email,body) {
+async function sendMail(name, email, body) {
   const CLIENT_EMAIL = process.env.REACT_APP_EMAIL;
   const CLIENT_ID = process.env.REACT_APP_EMAIL_CLIENT_ID;
   const CLIENT_SECRET = process.env.REACT_APP_EMAIL_CLIENT_SECRET;
@@ -40,7 +40,6 @@ async function sendMail(name, email,body) {
       },
     });
 
-
     const mailOptions = {
       from: `Bidding Cars <${CLIENT_EMAIL}>`,
       to: email,
@@ -56,8 +55,6 @@ async function sendMail(name, email,body) {
   }
 }
 
-
-
 cron.schedule('* * * * *', async () => {
   const cars = await Car.find({ status: 'approved' });
   const date = new Date();
@@ -65,9 +62,18 @@ cron.schedule('* * * * *', async () => {
     const diff = car.endTime - date;
     if (diff <= 0) {
       const id = car._id;
-      await Car.findByIdAndUpdate(id, {
-        status: 'sold'
-      });
+      const newCar = await Car.findByIdAndUpdate(
+        id,
+        {
+          status: 'sold',
+        },
+        {
+          new: true,
+        },
+      );
+
+      io.emit('bid_close', newCar);
+
       axios
         .post(
           'https://api.razorpay.com/v1/payment_links/',
@@ -107,12 +113,32 @@ cron.schedule('* * * * *', async () => {
         )
         .then(async (e) => {
           let name = `${car.carCompany} ${car.modelName} ${car.modelYear}`;
-          let body=`<p>Congratulations! you have won the bidding war of ${name}.</p><p> Please click on: ${e.data.short_url} to do the down-payment</p>`
-          sendMail(name, 'das.aman45@gmail.com',body)
-            .then((result) => console.log('result',result))
-            .catch((error) => console.log('error',error.message));
+          let body = `<p>Congratulations! you have won the bidding war of ${name}.</p><p> Please click on: ${e.data.short_url} to do the down-payment</p>`;
+          sendMail(name, 'das.aman45@gmail.com', body)
+            .then((result) => console.log('result', result))
+            .catch((error) => console.log('error', error.message));
         });
     }
   });
- 
+});
+
+const http = require('http');
+const socketApp = require('express')();
+const cors = require('cors');
+const socketServer = http.createServer(socketApp);
+const { Server } = require('socket.io');
+const io = new Server(socketServer, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+  },
+});
+
+io.on('connection', (socket) => {
+  console.log('user connected');
+});
+socketApp.use(cors());
+
+socketServer.listen(6000, () => {
+  console.log(`Server is running on socket: 6000`);
 });
