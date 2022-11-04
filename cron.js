@@ -140,6 +140,10 @@ const io = new Server(socketServer, {
 io.on('connection', (socket) => {
   console.log('user connected');
 });
+
+io.on('bid_close', (socket) => {
+  console.log('bid closed',socket.data);
+})
 socketApp.use(cors());
 
 socketServer.listen(port, () => {
