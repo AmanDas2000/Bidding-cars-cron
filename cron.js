@@ -143,8 +143,13 @@ io.on('connection', (socket) => {
 });
 
 io.on('bid_close', (socket) => {
-  console.log('bid closed',socket.data);
-})
+  console.log('bid closed', socket.data);
+});
+
+io.on('bid_update', (socket) => {
+  console.log('bid updated', socket.data);
+});
+
 socketApp.use(cors());
 
 socketServer.listen(port, () => {
