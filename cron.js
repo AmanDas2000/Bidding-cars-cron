@@ -140,6 +140,14 @@ cron.schedule('* * * * *', async () => {
 
 io.on('connection', (socket) => {
   console.log('user connected');
+
+  socket.on('bid_close', (socket) => {
+    console.log('bid closed', socket.data);
+  });
+  
+  socket.on('bid_update', (socket) => {
+    console.log('bid updated', socket.data);
+  });
 });
 
 io.on('bid_close', (socket) => {
