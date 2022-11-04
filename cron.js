@@ -7,6 +7,7 @@ const Razorpay = require('razorpay');
 const axios = require('axios');
 const { google } = require('googleapis');
 const uri = process.env.ATLAS_URI;
+const port = process.env.port || 6000;
 
 mongoose.connect(uri, { useNewUrlParser: true });
 const connection = mongoose.connection;
@@ -139,6 +140,6 @@ io.on('connection', (socket) => {
 });
 socketApp.use(cors());
 
-socketServer.listen(6000, () => {
-  console.log(`Server is running on socket: 6000`);
+socketServer.listen(port, () => {
+  console.log(`Server is running on socket: ${port}`);
 });
