@@ -7,7 +7,7 @@ const Razorpay = require('razorpay');
 const axios = require('axios');
 const { google } = require('googleapis');
 const uri = process.env.ATLAS_URI;
-const port = process.env.port || 6000;
+const port = process.env.PORT || 6000;
 
 mongoose.connect(uri, { useNewUrlParser: true });
 const connection = mongoose.connection;
