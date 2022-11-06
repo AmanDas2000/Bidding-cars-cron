@@ -112,7 +112,7 @@ cron.schedule('* * * * *', async () => {
             notes: {
               policy_name: 'Jeevan Bima',
             },
-            callback_url: 'https://example-callback-url.com/',
+            callback_url: 'https://biddingcars.netlify.app/auctions',
             callback_method: 'get',
           },
           {
